@@ -13,6 +13,7 @@ import traceback
 from argparse import Namespace
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Type, Union
+import os
 
 from yt_dlp.postprocessor.modify_chapters import ModifyChaptersPP
 from yt_dlp.postprocessor.sponsorblock import SponsorBlockPP
@@ -472,7 +473,8 @@ class Downloader:
             file_extension=self.settings["format"],
             restrict=self.settings["restrict"],
             file_name_length=self.settings["max_filename_length"],
-        )
+        ) 
+
 
         if song.explicit is True and self.settings["skip_explicit"] is True:
             logger.info("Skipping explicit song: %s", song.display_name)
@@ -781,7 +783,7 @@ class Downloader:
                     f"you can find error here: {str(file_name.absolute())}"
                 )
 
-            download_info["filepath"] = str(output_file)
+            download_info["filepath"] = output_file
 
             # Set the song's download url
             if song.download_url is None:

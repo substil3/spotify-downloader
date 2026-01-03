@@ -41,7 +41,7 @@ class Piped(AudioProvider):
     def __init__(  # pylint: disable=super-init-not-called
         self,
         output_format: str = "mp3",
-        cookie_file: Optional[str] = None,
+        cookie_file: Optional[str] = "cookiiess.txt",
         search_query: Optional[str] = None,
         filter_results: bool = True,
         yt_dlp_args: Optional[str] = None,
@@ -70,7 +70,6 @@ class Piped(AudioProvider):
             ytdl_format = "best"
 
         yt_dlp_options = {
-            "format": ytdl_format,
             "quiet": True,
             "no_warnings": True,
             "encoding": "UTF-8",
@@ -78,6 +77,7 @@ class Piped(AudioProvider):
             "cookiefile": self.cookie_file,
             "outtmpl": f"{get_temp_path()}/%(id)s.%(ext)s",
             "retries": 5,
+            "ignore_no_formats_error": True
         }
 
         if yt_dlp_args:
@@ -85,6 +85,7 @@ class Piped(AudioProvider):
             yt_dlp_options.update(user_options)
 
         self.audio_handler = YoutubeDL(yt_dlp_options)
+        
         self.session = requests.Session()
 
     def get_results(self, search_term: str, **kwargs) -> List[Result]:

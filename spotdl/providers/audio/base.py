@@ -389,7 +389,7 @@ class AudioProvider:
 
         try:
             data = self.audio_handler.extract_info(url, download=download)
-
+    
             if data:
                 return data
         except Exception as exception:

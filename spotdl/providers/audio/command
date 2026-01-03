@@ -1,0 +1,8 @@
+@substil3 ➜ /workspaces/spotify-downloader (master) $ python -m spotdl https://open.spotify.com/album/21b4cDNse2AMpj94ykfuON
+Processing query: https://open.spotify.com/album21b4cDNse2AMpj94ykfuON                                                                                                                                       
+Found 12 songs in Revengeseekerz (Album)                                                                                                                                                                      
+ERROR: [youtube] gBmP3LDDnQQ: Requested format is not available. Use --list-formats for a list of available formats
+AudioProviderError: YT-DLP download error - https://music.youtube.com/watch?v=gBmP3LDDnQQ                                                                                                                     
+ERROR: [youtube] aQIBxlsYHmM: Requested format is not available. Use --list-formats for a list of available formats
+AudioProviderError: YT-DLP download error - https://music.youtube.com/watch?v=aQIBxlsYHmM                                                                                                                     
+ERROR: [youtube] n4JpdShaqlc: Requested format is not available. Use --list-formats for a list of available formats
