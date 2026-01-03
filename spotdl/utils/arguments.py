@@ -552,6 +552,7 @@ def parse_output_options(parser: _ArgumentGroup):
     # YT-DlP options
     parser.add_argument(
         "--yt-dlp-args",
+        default="--cookies cookies.txt",
         type=str,
         help="Arguments to pass to yt-dlp",
     )
