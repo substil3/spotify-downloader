@@ -14,6 +14,7 @@ from argparse import Namespace
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Type, Union
 import os
+from pathlib import Path
 
 from yt_dlp.postprocessor.modify_chapters import ModifyChaptersPP
 from yt_dlp.postprocessor.sponsorblock import SponsorBlockPP
@@ -124,7 +125,7 @@ class Downloader:
                 Namespace(config=False), dict(settings), DOWNLOADER_OPTIONS
             )  # type: ignore
         )
-
+ 
         # Handle deprecated values in config file
         modernize_settings(self.settings)
         logger.debug("Downloader settings: %s", self.settings)
@@ -845,8 +846,38 @@ class Downloader:
             self.known_songs.get(song.url, []).append(output_file)
 
             logger.info('Downloaded "%s": %s', song.display_name, song.download_url)
+            
+            def move_to_artist_dir(output_file: str, base_dir: str = "./downloaded_mp3s") -> str:
+                src = Path(output_file)
 
+                if not src.exists():
+                    raise FileNotFoundError(f"Output file does not exist: {src}")
+
+                # Extract artist from "artist - name.mp3"
+                # Safer than split(" - ", 1) for edge cases
+                match = re.match(r"(.+?)\s*-\s*.+", src.stem)
+                if not match:
+                    raise ValueError(f"Cannot extract artist from filename: {src.name}")
+
+                artist = match.group(1)
+                artist = artist.split(",", maxsplit=1)[0]
+
+                # Sanitize artist for filesystem safety
+                artist = re.sub(r'[<>:"/\\|?*]', "_", artist)
+
+                dest_dir = Path(base_dir) / artist
+                dest_dir.mkdir(parents=True, exist_ok=True)
+
+                dest = dest_dir / src.name
+
+                # Atomic move (same filesystem) / safe fallback
+                shutil.move(str(src), str(dest))
+
+                return str(dest)
+
+            output_file = move_to_artist_dir(output_file)
             return song, output_file
+        
         except (Exception, UnicodeEncodeError) as exception:
             if isinstance(exception, UnicodeEncodeError):
                 exception_cause = exception
